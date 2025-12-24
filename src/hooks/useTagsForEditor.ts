@@ -32,7 +32,6 @@ export function useTagsForEditor() {
 
   useEffect(() => {
     refresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { tags, busy, err, refresh, createTag };
