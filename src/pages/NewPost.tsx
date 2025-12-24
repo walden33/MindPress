@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDraftPost } from "../data/posts";
 import { errorMessage } from "../utils/errorMessage";
@@ -8,7 +8,13 @@ export default function NewPost() {
   const navigate = useNavigate();
   const [err, setErr] = useState<string | null>(null);
 
+  // Prevent React StrictMode dev double-invocation
+  const startedRef = useRef(false);
+
   useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+
     let cancelled = false;
 
     (async () => {
@@ -19,7 +25,6 @@ export default function NewPost() {
         if (!cancelled) navigate(`/app/posts/${p.id}`, { replace: true });
       } catch (e: unknown) {
         if (!cancelled) setErr(errorMessage(e));
-        // Optional debug:
         console.error("createDraftPost failed:", e);
       }
     })();
