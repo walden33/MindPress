@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Posts from "./pages/Posts";
-import NewPost from "./pages/NewPost";
 import PostEditor from "./pages/PostEditor";
 import { RequireAuth } from "./routes/RequireAuth";
 import { AppLayout } from "./layouts/AppLayout";
@@ -23,7 +22,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="posts" element={<Posts />} />
-            <Route path="posts/new" element={<NewPost />} />
             <Route path="posts/:id" element={<PostEditor />} />
           </Route>
         </Route>
