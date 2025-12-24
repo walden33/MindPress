@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getPost,
   type PostRow,
-  upsertPost,
+  updatePost,
   uploadCoverImage,
 } from "../data/posts";
 import { getMyTagIdsForPost, setMyPostTags } from "../data/tags";
@@ -55,7 +55,7 @@ export default function PostEditor() {
         const tagIds = await getMyTagIdsForPost(p.id);
         if (!cancelled) setSelectedTagIds(tagIds);
 
-        // Resolve cover public url if you store just the path
+        // Resolve cover public url if storing just the path
         if (p.cover_image_path) {
           const { data } = supabase.storage
             .from("covers")
@@ -83,8 +83,7 @@ export default function PostEditor() {
       setSaveState("saving");
       setSaveMsg(null);
 
-      const updated = await upsertPost({
-        id: post.id,
+      const updated = await updatePost(post.id, {
         title: post.title,
         content_md: post.content_md,
         summary: post.summary,
@@ -95,7 +94,6 @@ export default function PostEditor() {
         cover_image_path: post.cover_image_path,
       });
 
-      // Sync tags
       await setMyPostTags(updated.id, selectedTagIds);
 
       setPost(updated);
@@ -115,7 +113,7 @@ export default function PostEditor() {
       setSaveState("saving");
       const { path, publicUrl } = await uploadCoverImage(file, post.id);
 
-      const updated = await upsertPost({ id: post.id, cover_image_path: path });
+      const updated = await updatePost(post.id, { cover_image_path: path });
       setPost(updated);
       setCoverUrl(publicUrl);
 

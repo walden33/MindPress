@@ -48,18 +48,6 @@ export async function getPost(id: string) {
   return data as PostRow;
 }
 
-export async function upsertPost(
-  input: Partial<PostRow> & Pick<PostRow, "id">,
-) {
-  const { data, error } = await supabase
-    .from("posts")
-    .upsert(input)
-    .select("*")
-    .single();
-  if (error) throw error;
-  return data as PostRow;
-}
-
 export async function deletePost(id: string) {
   const { error } = await supabase.from("posts").delete().eq("id", id);
   if (error) throw error;
@@ -129,4 +117,31 @@ export async function uploadCoverImage(
 
   const { data } = supabase.storage.from("covers").getPublicUrl(path);
   return { path, publicUrl: data.publicUrl };
+}
+
+export async function updatePost(
+  id: string,
+  patch: Partial<
+    Pick<
+      PostRow,
+      | "title"
+      | "content_md"
+      | "summary"
+      | "occurred_on"
+      | "status"
+      | "visibility"
+      | "published_at"
+      | "cover_image_path"
+    >
+  >,
+) {
+  const { data, error } = await supabase
+    .from("posts")
+    .update(patch)
+    .eq("id", id)
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data as PostRow;
 }
