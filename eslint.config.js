@@ -38,4 +38,14 @@ export default defineConfig([
       "import/no-default-export": "error",
     },
   },
+  {
+    files: [
+      "src/pages/**/*.{ts,tsx}",
+      "src/components/**/*.{ts,tsx}",
+      "**/vite.config.ts",
+    ],
+    rules: {
+      "import/no-default-export": "off",
+    },
+  },
 ]);
