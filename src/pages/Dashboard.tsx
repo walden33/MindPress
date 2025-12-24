@@ -12,7 +12,7 @@ export default function Dashboard() {
   const { posts, busy, err } = usePosts(from, to, 10);
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <StatCard label="Total posts" value={stats?.total ?? "—"} />
         <StatCard label="Drafts" value={stats?.drafts ?? "—"} />
