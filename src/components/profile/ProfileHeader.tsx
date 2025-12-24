@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import supabase from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 import type { ProfileRow } from "../../data/profile";
 import { updateMyProfile } from "../../data/profile";
 

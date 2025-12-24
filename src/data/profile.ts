@@ -1,4 +1,4 @@
-import supabase from "../lib/supabaseClient";
+import { supabase } from "../lib/supabaseClient";
 
 export type ProfileRow = {
   user_id: string;

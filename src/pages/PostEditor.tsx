@@ -10,7 +10,7 @@ import {
 import { getMyTagIdsForPost, setMyPostTags } from "../data/tags";
 import { useTagsForEditor } from "../hooks/useTagsForEditor";
 import { TagPicker } from "../components/posts/TagPicker";
-import supabase from "../lib/supabaseClient";
+import { supabase } from "../lib/supabaseClient";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
