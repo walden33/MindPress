@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDraftPost } from "../data/posts";
+import { errorMessage } from "../utils/errorMessage";
 
 export default function NewPost() {
   const navigate = useNavigate();
@@ -17,8 +18,9 @@ export default function NewPost() {
         });
         if (!cancelled) navigate(`/app/posts/${p.id}`, { replace: true });
       } catch (e: unknown) {
-        if (!cancelled)
-          setErr(e instanceof Error ? e.message : "Failed to create post");
+        if (!cancelled) setErr(errorMessage(e));
+        // Optional debug:
+        console.error("createDraftPost failed:", e);
       }
     })();
 
