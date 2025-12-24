@@ -85,3 +85,48 @@ export async function getPostStats({
   const published = data.filter((r) => r.status === "published").length;
   return { total, drafts, published };
 }
+
+export async function createDraftPost(params?: {
+  occurred_on?: string;
+}): Promise<PostRow> {
+  const { data: auth } = await supabase.auth.getUser();
+  const user = auth.user;
+  if (!user) throw new Error("Not signed in");
+
+  const { data, error } = await supabase
+    .from("posts")
+    .insert({
+      user_id: user.id,
+      title: "",
+      content_md: "",
+      status: "draft",
+      visibility: "private",
+      occurred_on: params?.occurred_on,
+    })
+    .select("*")
+    .single();
+
+  if (error) throw error;
+  return data as PostRow;
+}
+
+export async function uploadCoverImage(
+  file: File,
+  postId: string,
+): Promise<{ path: string; publicUrl: string }> {
+  const { data: auth } = await supabase.auth.getUser();
+  const user = auth.user;
+  if (!user) throw new Error("Not signed in");
+
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = `${user.id}/${postId}/${Date.now()}-${safeName}`;
+
+  const { error: upErr } = await supabase.storage
+    .from("covers")
+    .upload(path, file, { contentType: file.type });
+
+  if (upErr) throw upErr;
+
+  const { data } = supabase.storage.from("covers").getPublicUrl(path);
+  return { path, publicUrl: data.publicUrl };
+}
