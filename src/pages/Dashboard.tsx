@@ -1,12 +1,15 @@
 import { useMemo } from "react";
 import dayjs from "dayjs";
 import { usePostStats } from "../hooks/usePostStats";
+import { usePosts } from "../hooks/usePosts";
+import { PostsList } from "../components/posts/PostsList";
 
 export default function Dashboard() {
   const from = useMemo(() => dayjs().startOf("month").format("YYYY-MM-DD"), []);
   const to = useMemo(() => dayjs().endOf("month").format("YYYY-MM-DD"), []);
 
   const { stats } = usePostStats(from, to);
+  const { posts, busy, err } = usePosts(from, to, 10);
 
   return (
     <div className="p-6 space-y-4">
@@ -15,6 +18,14 @@ export default function Dashboard() {
         <StatCard label="Drafts" value={stats?.drafts ?? "—"} />
         <StatCard label="Published" value={stats?.published ?? "—"} />
       </div>
+
+      <PostsList
+        title="This month"
+        posts={posts}
+        busy={busy}
+        err={err}
+        emptyHint="No posts yet this month."
+      />
     </div>
   );
 }
